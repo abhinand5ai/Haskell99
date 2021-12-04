@@ -40,7 +40,7 @@ myReverse (x : xs) = myReverse xs ++ [x]
 isPalindrome :: (Eq a) => [a] -> Bool
 isPalindrome [] = True
 isPalindrome [x] = True
-isPalindrome (x : xs) = (x == last xs) && isPalindrome (init xs)
+isPalindrome (x : xs) = x == last xs && isPalindrome (init xs)
 
 -- #7
 data NestedList a = Elem a | List [NestedList a]
@@ -80,7 +80,67 @@ encodeModified =
    in map tupleToItem . encode
 
 -- #12
+decodeModified :: [Item a] -> [a]
+decodeModified =
+  let decodeItem :: Item a -> [a]
+      decodeItem x = case x of
+        Multiple n a -> replicate n a
+        Single a -> [a]
+   in concatMap decodeItem
 
+-- #13
+encodeDirect :: (Eq a) => [a] -> [Item a]
+encodeDirect [] = []
+encodeDirect [a] = [Single a]
+encodeDirect (x : xs) =
+  let getItem :: Item a -> a
+      getItem (Single a) = a
+      getItem (Multiple _ a) = a
+
+      getItemCount :: Item a -> Int
+      getItemCount (Single _) = 1
+      getItemCount (Multiple n _) = n
+      encodedTail = encodeDirect xs
+      nextElement = head encodedTail
+      nextElementCount = getItemCount nextElement
+   in if getItem nextElement == x
+        then Multiple (nextElementCount + 1) x : tail encodedTail
+        else Single x : encodedTail
+
+-- # 14
+dupli :: [a] -> [a]
+dupli = concatMap (replicate 2)
+
+-- # 15
+repli :: [a] -> Int -> [a]
+repli x n = concatMap (replicate n) x
+
+-- # 16
+
+dropEvery :: [a] -> Int -> [a]
+dropEvery [] n = []
+dropEvery xs n = take (n - 1) xs ++ dropEvery (drop n xs) n
+
+-- # 17
+split :: [a] -> Int -> ([a], [a])
+split xs n = splitAt n xs
+
+-- # 18
+slice :: [a] -> Int -> Int -> [a]
+slice xs start end = drop (start - 1) $ take end xs
+
+-- # 19
+rotate :: [a] -> Int -> [a]
+rotate xs k =
+  let len = length xs
+      k_final = if k >= 0 then rem k len else len - rem (-1 * k) len
+   in drop k_final xs ++ reverse (take k_final xs)
+
+-- # 20
+removeAt :: Int -> [a] -> (a, [a])
+removeAt k xs = (xs !! k ,take (k - 1) xs ++ drop k xs)
+
+--------------------------------------
 nCr :: Int -> Int -> Int
 nCr _ 0 = 1
 nCr n r
