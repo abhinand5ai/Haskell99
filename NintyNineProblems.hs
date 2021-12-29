@@ -138,7 +138,18 @@ rotate xs k =
 
 -- # 20
 removeAt :: Int -> [a] -> (a, [a])
-removeAt k xs = (xs !! k ,take (k - 1) xs ++ drop k xs)
+removeAt k xs = (xs !! k, take (k - 1) xs ++ drop k xs)
+
+-- # 21
+insertAt :: a -> [a] -> Int -> [a]
+insertAt x ls 1 = x : ls
+insertAt x ls i = head ls : insertAt x (tail ls) (i - 1)
+
+-- # 22
+range :: Int -> Int -> [Int]
+range x y = if x == y then [x] else x : range (x  + 1) y
+
+-- # 23
 
 --------------------------------------
 nCr :: Int -> Int -> Int
