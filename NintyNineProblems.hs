@@ -140,6 +140,17 @@ rotate xs k =
 removeAt :: Int -> [a] -> (a, [a])
 removeAt k xs = (xs !! k ,take (k - 1) xs ++ drop k xs)
 
+-- # 21
+insertAt:: a -> [a] -> Int -> [a]
+insertAt x [] k= []
+insertAt x xs 1 = x:xs
+insertAt x xs k = head xs : insertAt x (tail xs) (k - 1)
+
+-- # 22
+range:: Int -> Int -> [Int]
+range start end 
+  | start == end = [start]
+  | start < end = start : range (start + 1) end
 --------------------------------------
 nCr :: Int -> Int -> Int
 nCr _ 0 = 1
