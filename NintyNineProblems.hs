@@ -151,6 +151,7 @@ range x y = if x == y then [x] else x : range (x  + 1) y
 
 -- # 23
 
+
 --------------------------------------
 nCr :: Int -> Int -> Int
 nCr _ 0 = 1
@@ -172,3 +173,6 @@ v1 = let rec n = if n <= 1 then 1 else n * rec (n - 1) in rec 5
 
 fibMemo :: Int -> Integer
 fibMemo = fix (memoize . fib)
+
+
+
