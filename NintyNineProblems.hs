@@ -26,6 +26,11 @@ myButLast' = last . init
 elementAt :: [a] -> Int -> a
 elementAt ls k = ls !! k
 
+elementAt' :: [a] -> Int -> a
+elementAt' (hd : _) 0 = hd
+elementAt' [] x = error "Index out of bound error"
+elementAt' (hd: xs) x = elementAt' xs (x - 1)
+
 -- #4
 myLen :: [a] -> Int
 myLen [] = 0
