@@ -45,9 +45,11 @@ percent n m = fromIntegral n / fromIntegral m * 100
 lower :: String -> Int
 lower xs = length [x | x <- xs, isAsciiLower x]
 
-freqs :: String -> [Float]
+count :: Char -> String -> Int
+count x xs = length [x' | x' <- xs, x == x']
 
-freq xs = [percent (count x xs) n | x <- ['a' .. 'z']]
+freqs :: String -> [Float]
+freqs xs = [percent (count x xs) n | x <- ['a' .. 'z']]
   where
     n = lower xs
 
@@ -57,11 +59,10 @@ chisqr os es = sum [((o - e) ^ 2) / e | (o, e) <- zip os es]
 rotate :: Int -> [a] -> [a]
 rotate n xs = drop n xs ++ take n xs
 
-table :: [Float]
 table = [8.1, 1.5, 2.8, 4.2, 12.7, 2.2, 2.0, 6.1, 7.0, 0.2, 0.8, 4.0, 2.4, 6.7, 7.5, 1.9, 0.1, 6.0, 6.3, 9.0, 2.8, 1.0, 2.4, 0.2, 2.0, 0.1]
 
 crack :: String -> String
 crack xs = encode (-factor) xs
   where
-    scores = [chisqr (table (rotate n (freqs xs))) | n <- [0 .. 25]]
+    scores = [chisqr table (rotate n (freqs xs)) | n <- [0 .. 25]]
     factor = head (positions (minimum scores) scores)
