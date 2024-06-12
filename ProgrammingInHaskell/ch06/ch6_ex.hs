@@ -34,3 +34,44 @@ msort [x] = [x]
 msort xs = merge (msort first) (msort second)
   where
     (first, second) = splitAt (length xs `div` 2) xs
+
+-- 6
+and' :: [Bool] -> Bool
+and' [] = True
+and' (x : xs) = if x then and' xs else False
+
+concat' :: [[a]] -> [a]
+concat' [] = []
+concat' (x : xs) = case x of
+  [] -> concat' xs
+  l : ls -> l : concat' (ls : xs)
+
+replicate' :: Int -> a -> [a]
+
+replcate' 0 _ = []
+
+replicate' n x = x : replicate' (n - 1) x
+
+nth :: [a] -> Int -> a
+nth (x : xs) 0 = x
+nth (x : xs) n = nth xs (n - 1)
+nth _ _ = error "invalid index"
+
+elem' :: (Eq a) => [a] -> a -> Bool
+elem' [] _ = False
+elem' (l : ls) x = (x == l) || elem' ls x
+
+-- 9
+sum' :: (Num a) => [a] -> a
+sum' [] = 0
+sum' (x : xs) = x + (sum' xs)
+
+take' :: Int -> [a] -> [a]
+take' 0 _ = []
+take' n [] = []
+take' n (x : xs) = x : take' (n - 1) xs
+
+last' :: [a] -> a
+last' [] = error "empty list"
+last' (x : xs) = last' xs
+last' [x] = x
