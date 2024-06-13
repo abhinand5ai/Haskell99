@@ -38,7 +38,7 @@ msort xs = merge (msort first) (msort second)
 -- 6
 and' :: [Bool] -> Bool
 and' [] = True
-and' (x : xs) = if x then and' xs else False
+and' (x : xs) = x && and' xs
 
 concat' :: [[a]] -> [a]
 concat' [] = []
@@ -59,12 +59,11 @@ nth _ _ = error "invalid index"
 
 elem' :: (Eq a) => [a] -> a -> Bool
 elem' [] _ = False
-elem' (l : ls) x = (x == l) || elem' ls x
+elem' (l : ls) x = x == l || elem' ls x
 
 -- 9
 sum' :: (Num a) => [a] -> a
-sum' [] = 0
-sum' (x : xs) = x + (sum' xs)
+sum' xs = foldr (+) 0 xs
 
 take' :: Int -> [a] -> [a]
 take' 0 _ = []
