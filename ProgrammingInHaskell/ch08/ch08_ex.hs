@@ -105,6 +105,7 @@ substs p = map (zip vs) (bools (length vs))
 
 isTaut :: Prop -> Bool
 isTaut p = and [eval s p | s <- substs p]
+
 -----------------------------------------------
 
 -------------------
@@ -112,3 +113,20 @@ isTaut p = and [eval s p | s <- substs p]
 -------------------
 
 data Expr = Val Int | Add Expr Expr
+
+value :: Expr -> Int
+value (Val x) = x
+value (Add a b) = value a + value b
+
+type Cont = [Op]
+
+data Op = EVAL Expr | ADD Int
+
+eva :: Expr -> Cont -> Int
+eva (Val n) c = exec c n
+eva (Add x y) c = eva x (EVAL y : c)
+
+exec :: Cont -> Int -> Int
+exec [] n = n
+exec (EVAL y : c) n = eva y (ADD n : c)
+exec (ADD n : c) m = exec c (n + m) 
