@@ -129,4 +129,49 @@ eva (Add x y) c = eva x (EVAL y : c)
 exec :: Cont -> Int -> Int
 exec [] n = n
 exec (EVAL y : c) n = eva y (ADD n : c)
-exec (ADD n : c) m = exec c (n + m) 
+exec (ADD n : c) m = exec c (n + m)
+
+-- 8.9
+-- 1
+nat2int :: Nat -> Int
+nat2int Zero = 0
+nat2int (Succ n) = 1 + nat2int n
+
+int2nat :: Int -> Nat
+int2nat 0 = Zero
+int2nat n = Succ (int2nat (n - 1))
+
+add :: Nat -> Nat -> Nat
+add m n = int2nat (nat2int m + nat2int n)
+
+mult' :: Nat -> Nat -> Nat
+mult' Zero _ = Zero
+mult' (Succ n) m = add (mult' n m) n
+
+-- 2
+
+occurs :: (Ord a) => a -> Tree' a -> Bool
+occurs item tree = case tree of
+  Leaf x -> EQ == compare item x
+  Node left x right -> (item == x) || (occurs item left || occurs item right)
+
+isBalanced :: Tree' a -> Bool
+isBalanced (Leaf _) = True
+isBalanced (Node left _ right) = abs (height left - height right) <= 1 && isBalanced left && isBalanced right
+
+height :: Tree' a -> Int
+height (Leaf _) = 1
+height (Node left _ right) = 1 + max (height left) (height right)
+
+balance :: [a] -> Tree' a
+balance [x] = Leaf x
+balance xs = Node (balance left) x (balance right)
+  where
+    (left, x : right) = splitAt (length xs `div` 2) xs
+
+folde :: (Int -> a) -> (a -> a -> a) -> Expr -> a
+folde f g (Val x) = f x
+folde f g (Add x y) = g (folde f g x) (folde f g y)
+
+countExpVal :: Expr -> Int
+countExpVal = folde (const 1) (+)
