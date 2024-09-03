@@ -3,6 +3,7 @@ import Data.Graph (Tree)
 import Distribution.Backpack.ModSubst (ModSubst)
 import Distribution.PackageDescription (ConfVar (Impl))
 import GHC.Exts.Heap (GenClosure (var))
+import GHC.Generics (D)
 
 type Pair a = (a, a)
 
@@ -39,6 +40,10 @@ newtype Natural = N Int
 
 data Nat = Zero | Succ Nat
 
+instance Show Nat where
+  show Zero = "Zero"
+  show (Succ n) = "Succ " ++ show n
+
 data Lst a = Nil | Cons a (Lst a)
 
 data Tree' a = Leaf a | Node (Tree' a) a (Tree' a)
@@ -53,6 +58,8 @@ data Prop
   | Not Prop
   | And Prop Prop
   | Imply Prop Prop
+  | Equiv Prop Prop
+  | Disj Prop Prop
 
 p1 :: Prop
 p1 = And (Var 'A') (Not (Var 'A'))
@@ -83,6 +90,8 @@ eval s (Var x) = find x s
 eval s (Not p) = not (eval s p)
 eval s (And p q) = eval s p && eval s q
 eval s (Imply p q) = eval s p <= eval s q
+eval s (Equiv p q) = eval s p == eval s q
+eval s (Disj p q) = eval s p || eval s q
 
 vars :: Prop -> [Char]
 vars (Const _) = []
@@ -90,6 +99,8 @@ vars (Var x) = [x]
 vars (Not p) = vars p
 vars (And p q) = vars p ++ vars q
 vars (Imply p q) = vars p ++ vars q
+vars (Equiv p q) = vars p ++ vars q
+vars (Disj p q) = vars p ++ vars q
 
 bools :: Int -> [[Bool]]
 bools 0 = [[]]
@@ -112,7 +123,7 @@ isTaut p = and [eval s p | s <- substs p]
 -- Abstract Machine
 -------------------
 
-data Expr = Val Int | Add Expr Expr
+data Expr = Val Int | Add Expr Expr | Mult Expr Expr
 
 value :: Expr -> Int
 value (Val x) = x
@@ -120,11 +131,12 @@ value (Add a b) = value a + value b
 
 type Cont = [Op]
 
-data Op = EVAL Expr | ADD Int
+data Op = EVAL Expr | ADD Int | MULT
 
 eva :: Expr -> Cont -> Int
 eva (Val n) c = exec c n
 eva (Add x y) c = eva x (EVAL y : c)
+eva (Mult x y) c = eva x (EVAL y : MULT : c)
 
 exec :: Cont -> Int -> Int
 exec [] n = n
@@ -142,12 +154,12 @@ int2nat 0 = Zero
 int2nat n = Succ (int2nat (n - 1))
 
 add :: Nat -> Nat -> Nat
-add m n = int2nat (nat2int m + nat2int n)
+add m Zero = m
+add m (Succ n) = Succ (add m n)
 
 mult' :: Nat -> Nat -> Nat
-mult' Zero _ = Zero
-mult' (Succ n) m = add (mult' n m) n
-
+mult' m Zero = Zero
+mult' m (Succ n) = add m (mult' m n)
 -- 2
 
 occurs :: (Ord a) => a -> Tree' a -> Bool
@@ -173,5 +185,26 @@ folde :: (Int -> a) -> (a -> a -> a) -> Expr -> a
 folde f g (Val x) = f x
 folde f g (Add x y) = g (folde f g x) (folde f g y)
 
+
+sizeExp :: Expr -> Int
+sizeExp = folde (const 1) (+)
+
 countExpVal :: Expr -> Int
 countExpVal = folde (const 1) (+)
+
+-- instance Eq a => Eq (Maybe a) where
+--   Nothing == Nothing = True
+--   Just x == Just y = x == y
+--   _ == _ = False
+
+instance Eq a => Eq (Lst a) where
+  Nil == Nil = True
+  Cons x xs == Cons y ys = x == y && xs == ys
+  _ == _ = False
+
+
+-- Tautology checker to support disjunction and equivalence in propositions
+
+
+p6 :: Prop
+p6 = Equiv (Var 'A') (Disj (Var 'A') (Var 'A'))
