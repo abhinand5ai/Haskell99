@@ -1,5 +1,5 @@
-import Control.Arrow (Arrow (first))
-import Data.Char (chr, isAsciiLower, ord)
+import           Control.Arrow (Arrow (first))
+import           Data.Char     (chr, isAsciiLower, ord)
 
 ls = [(x, y) | x <- [1, 2, 3], y <- [4, 5, 6]]
 
@@ -59,7 +59,34 @@ chisqr os es = sum [((o - e) ^ 2) / e | (o, e) <- zip os es]
 rotate :: Int -> [a] -> [a]
 rotate n xs = drop n xs ++ take n xs
 
-table = [8.1, 1.5, 2.8, 4.2, 12.7, 2.2, 2.0, 6.1, 7.0, 0.2, 0.8, 4.0, 2.4, 6.7, 7.5, 1.9, 0.1, 6.0, 6.3, 9.0, 2.8, 1.0, 2.4, 0.2, 2.0, 0.1]
+table =
+  [ 8.1
+  , 1.5
+  , 2.8
+  , 4.2
+  , 12.7
+  , 2.2
+  , 2.0
+  , 6.1
+  , 7.0
+  , 0.2
+  , 0.8
+  , 4.0
+  , 2.4
+  , 6.7
+  , 7.5
+  , 1.9
+  , 0.1
+  , 6.0
+  , 6.3
+  , 9.0
+  , 2.8
+  , 1.0
+  , 2.4
+  , 0.2
+  , 2.0
+  , 0.1
+  ]
 
 crack :: String -> String
 crack xs = encode (-factor) xs

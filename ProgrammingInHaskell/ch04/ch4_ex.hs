@@ -8,7 +8,7 @@ third = head . tail . tail
 
 third' xs = xs !! 2
 
-third'' (_ : _ : x : _) = x
+third'' (_:_:x:_) = x
 
 safetail :: [a] -> [a]
 safetail xs =
@@ -20,21 +20,23 @@ safetail' xs
   | null xs = []
   | otherwise = tail xs
 
-safetail'' [] = []
-safetail'' (_ : xs) = xs
+safetail'' []     = []
+safetail'' (_:xs) = xs
 
 (||) :: Bool -> Bool -> Bool
 (||) False False = False
-(||) _ _ = True
+(||) _ _         = True
 
 (|||) :: Bool -> Bool -> Bool
 (|||) False b = b
-(|||) True _ = True
+(|||) True _  = True
 
 (&&) :: Bool -> Bool -> Bool
 (&&) a b =
   if a
-    then if b then True else False
+    then if b
+           then True
+           else False
     else False
 
 (&&&) :: Bool -> Bool -> Bool
@@ -53,4 +55,3 @@ luhnDouble x
 
 luhn :: Int -> Int -> Int -> Int -> Bool
 luhn a b c d = sum [luhnDouble a, b, luhnDouble c, d] `mod` 10 == 0
-

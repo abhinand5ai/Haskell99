@@ -1,17 +1,16 @@
-import Data.Binary (decode)
-import Data.Char (chr, ord)
-import Data.List (sort)
-import Data.Text.Lazy.Builder.Int (decimal)
+import           Data.Binary                (decode)
+import           Data.Char                  (chr, ord)
+import           Data.List                  (sort)
+import           Data.Text.Lazy.Builder.Int (decimal)
 
 foldr' :: (a -> b -> b) -> b -> [a] -> b
-foldr' f v [] = v
-foldr' f v (x : xs) = f x (foldr' f v xs)
+foldr' f v []     = v
+foldr' f v (x:xs) = f x (foldr' f v xs)
 
 -- f x1 (f x2 (f x3 v))
-
 foldl' :: (a -> b -> b) -> b -> [a] -> b
-foldl' f v [] = v
-foldl' f v (x : xs) = foldl' f (f x v) xs
+foldl' f v []     = v
+foldl' f v (x:xs) = foldl' f (f x v) xs
 
 type Bit = Int
 
@@ -33,7 +32,7 @@ encode :: String -> [Bit]
 encode = concatMap (make8 . int2Bin . ord)
 
 chop8 :: [Bit] -> [[Bit]]
-chop8 [] = []
+chop8 []   = []
 chop8 bits = take 8 bits : chop8 (drop 8 bits)
 
 decode' :: [Bit] -> String
@@ -49,8 +48,8 @@ votes :: [String]
 votes = ["Red", "Blue", "Green", "Blue", "Blue", "Red"]
 
 uniq :: (Eq a) => [a] -> [a]
-uniq [] = []
-uniq (x : xs) = x : filter (/= x) (uniq xs)
+uniq []     = []
+uniq (x:xs) = x : filter (/= x) (uniq xs)
 
 count :: (Eq a) => a -> [a] -> Int
 count v = length . filter (== v)

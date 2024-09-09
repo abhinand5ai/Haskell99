@@ -1,8 +1,8 @@
-import Control.Arrow (Arrow (second))
-import Data.ByteString (copy)
-import Data.Text.Lazy.Read (double)
-import Data.Tuple (swap)
-import Data.Type.Equality (apply)
+import           Control.Arrow       (Arrow (second))
+import           Data.ByteString     (copy)
+import           Data.Text.Lazy.Read (double)
+import           Data.Tuple          (swap)
+import           Data.Type.Equality  (apply)
 
 ls = ['a', 'b', 'c']
 
