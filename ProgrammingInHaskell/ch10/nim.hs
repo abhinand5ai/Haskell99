@@ -1,3 +1,18 @@
+module Nim
+  ( next,
+    Board,
+    initial,
+    finished,
+    valid,
+    move,
+    putRow,
+    putBoard,
+    getDigit,
+    newline,
+    play,
+  )
+where
+
 import Data.Char
 
 next :: Int -> Int
