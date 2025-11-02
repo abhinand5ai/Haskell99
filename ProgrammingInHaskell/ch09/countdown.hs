@@ -40,42 +40,42 @@ instance Show Expr where
   show (App o l r) = brak l ++ show o ++ brak r
     where
       brak (Val n) = show n
-      brak e       = "(" ++ show e ++ ")"
+      brak e = "(" ++ show e ++ ")"
 
 subs :: [a] -> [[a]]
 subs [] = []
 subs [x] = [[], [x]]
-subs (x:xs) = chs ++ [x : ch | ch <- chs]
+subs (x : xs) = chs ++ [x : ch | ch <- chs]
   where
     chs = subs xs
 
 interleave :: a -> [a] -> [[a]]
-interleave x []     = [[x]]
-interleave x (y:ys) = (x : y : ys) : map (y :) (interleave x ys)
+interleave x [] = [[x]]
+interleave x (y : ys) = (x : y : ys) : map (y :) (interleave x ys)
 
 perms :: [a] -> [[a]]
-perms []     = [[]]
-perms [x]    = [[x]]
-perms (x:xs) = concatMap (interleave x) (perms xs)
+perms [] = [[]]
+perms [x] = [[x]]
+perms (x : xs) = concatMap (interleave x) (perms xs)
 
 choices :: [a] -> [[a]]
 choices = concatMap perms . subs
 
 values :: Expr -> [Int]
-values (Val n)     = [n]
+values (Val n) = [n]
 values (App _ l r) = values l ++ values r
 
 eval :: Expr -> [Int]
-eval (Val n)     = [n | n > 0]
+eval (Val n) = [n | n > 0]
 eval (App o l r) = [apply o x y | x <- eval l, y <- eval r, valid o x y]
 
 solution :: Expr -> [Int] -> Int -> Bool
 solution e ns n = elem (values e) (choices ns) && eval e == [n]
 
 split :: [a] -> [([a], [a])]
-split []     = []
-split [_]    = []
-split (x:xs) = ([x], xs) : [(x : ls, rs) | (ls, rs) <- split xs]
+split [] = []
+split [_] = []
+split (x : xs) = ([x], xs) : [(x : ls, rs) | (ls, rs) <- split xs]
 
 combine :: Expr -> Expr -> [Expr]
 combine l r = [App o l r | o <- ops]
@@ -96,10 +96,10 @@ results [] = []
 results [n] = [(Val n, n) | n > 0]
 results ns =
   [ res
-  | (ls, rs) <- split ns
-  , lx <- results ls
-  , ry <- results rs
-  , res <- combine' lx ry
+    | (ls, rs) <- split ns,
+      lx <- results ls,
+      ry <- results rs,
+      res <- combine' lx ry
   ]
 
 combine' :: Result -> Result -> [Result]
