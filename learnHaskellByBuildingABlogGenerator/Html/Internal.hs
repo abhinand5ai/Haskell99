@@ -1,8 +1,10 @@
 module Html.Internal where
 
-newtype Html = Html String
+newtype Html =
+  Html String
 
-newtype Structure = Structure String
+newtype Structure =
+  Structure String
 
 append_ :: Structure -> Structure -> Structure
 append_ (Structure x) (Structure y) = Structure (x <> y)
@@ -70,10 +72,10 @@ escape :: String -> String
 escape =
   let escapeChar c =
         case c of
-          '<' -> "&lt;"
-          '>' -> "&gt;"
-          '&' -> "&amp;"
-          '"' -> "&quot;"
+          '<'  -> "&lt;"
+          '>'  -> "&gt;"
+          '&'  -> "&amp;"
+          '"'  -> "&quot;"
           '\'' -> "&#39;"
-          _ -> [c]
+          _    -> [c]
    in concatMap escapeChar

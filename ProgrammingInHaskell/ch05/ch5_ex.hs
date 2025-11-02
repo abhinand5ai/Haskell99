@@ -1,5 +1,5 @@
-import Data.List (find)
-import Main (positions)
+import           Data.List (find)
+import           Main      (positions)
 
 sumSquared :: Int -> Int
 sumSquared n = sum [x ^ 2 | x <- [1 .. n]]
@@ -14,7 +14,13 @@ replicate :: Int -> a -> [a]
 replicate n x = [x | _ <- [1 .. n]]
 
 pyths :: Int -> [(Int, Int, Int)]
-pyths n = [(x, y, z) | x <- [1 .. n], y <- [1 .. n], z <- [1 .. n], x ^ 2 + y ^ 2 == z ^ 2]
+pyths n =
+  [ (x, y, z)
+  | x <- [1 .. n]
+  , y <- [1 .. n]
+  , z <- [1 .. n]
+  , x ^ 2 + y ^ 2 == z ^ 2
+  ]
 
 factors :: Int -> [Int]
 factors n = [x | x <- [1 .. n], n `mod` x == 0]

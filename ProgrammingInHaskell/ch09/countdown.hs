@@ -45,7 +45,7 @@ instance Show Expr where
 subs :: [a] -> [[a]]
 subs [] = []
 subs [x] = [[], [x]]
-subs (x : xs) = chs ++ [x : ch | ch <- chs]
+subs (x : xs) = [x : ch | ch <- chs] ++ chs
   where
     chs = subs xs
 

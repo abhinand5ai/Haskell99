@@ -1,38 +1,40 @@
-module TrafficLight (
-TrafficLight (..),
-EEq (..),
-YesNo,
-yesnoIf
-)
-where
+module TrafficLight
+  ( TrafficLight(..)
+  , EEq(..)
+  , YesNo
+  , yesnoIf
+  ) where
 
-import Tree
+import           Tree
+
 class EEq a where
   (~~) :: a -> a -> Bool
   (!~) :: a -> a -> Bool
   x ~~ y = not (x !~ y)
-  x !~ y = not( x ~~ y)
+  x !~ y = not (x ~~ y)
 
-
-data TrafficLight = Red | Yellow | Green
+data TrafficLight
+  = Red
+  | Yellow
+  | Green
 
 instance EEq TrafficLight where
-    Red ~~ Red = True
-    Green ~~ Green = True
-    Yellow ~~ Yellow = True
-    _ ~~ _ = False
+  Red ~~ Red       = True
+  Green ~~ Green   = True
+  Yellow ~~ Yellow = True
+  _ ~~ _           = False
 
 instance Eq TrafficLight where
-  Red == Red = True
-  Green == Green = True
+  Red == Red       = True
+  Green == Green   = True
   Yellow == Yellow = True
-  _ == _ = False
+  _ == _           = False
 
 instance Show TrafficLight where
-    show Red = "Red Light"
-    show Yellow = "Yellow Light"
-    show Green = "Green Light"
-  
+  show Red    = "Red Light"
+  show Yellow = "Yellow Light"
+  show Green  = "Green Light"
+
 class YesNo a where
   yesno :: a -> Bool
 
@@ -41,27 +43,26 @@ instance YesNo Int where
   yesno _ = True
 
 instance YesNo [a] where
-    yesno [] = False
-    yesno _ = True  
+  yesno [] = False
+  yesno _  = True
 
 instance YesNo Bool where
-    yesno = id
+  yesno = id
 
 instance YesNo (Maybe a) where
-    yesno (Just _) = True
-    yesno Nothing = False
+  yesno (Just _) = True
+  yesno Nothing  = False
 
 instance YesNo (Tree a) where
-    yesno EmptyTree = False
-    yesno _ = True
+  yesno EmptyTree = False
+  yesno _         = True
 
 instance YesNo TrafficLight where
-    yesno Red = False
-    yesno _ = True
-
+  yesno Red = False
+  yesno _   = True
 
 yesnoIf :: (YesNo y) => y -> a -> a -> a
 yesnoIf yesnoVal yesResult noResult =
-    if yesno yesnoVal
-        then yesResult
-        else noResult
+  if yesno yesnoVal
+    then yesResult
+    else noResult
